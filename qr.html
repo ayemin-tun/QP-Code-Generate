@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
+        #qrCodeContainer{
+            padding:10px;
+            text-align: center;
+            border:1px solid #ddd;
+            border-radius: 10px;
+        }
+        @media only screen and (max-width: 768px) {
+            #qrCodeContainer {
+                max-width: 100%;
+            }
+        }
+        .generateText,.generateBtn{
+            margin-bottom: 20px;
+            font-size: 15px;
+            padding: 5px;
+        }
+        .qrGenerateArea{
+            display: none;
+            opacity: 0;
+            transition:  0.5s ease-in;
+        }
+        .qrGenerateArea.show{
+            opacity: 1;
+        }
+        .qrImg{
+            margin-bottom: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="qrCodeContainer">
+        <h3>Generate QR code</h3>
+        <form action="get" class="form">
+            <input type="text" name="text" id="" class="generateText">
+            <input type="button" value="Generate QR" class="generateBtn">
+        </form>
+        <div class="qrGenerateArea">
+            <hr>
+            <p>Qr code</p>
+            <img src="" width="150px" height="150px" class="qrImg"><br>
+            <button class="saveBtn">Save QR</button>
+        </div>
+        
+    </div>
+
+    <script>
+        var generateQr =(txtInput)=>{
+            if(txtInput==""){
+                alert("no input in input field");
+                document.querySelector('.qrGenerateArea').style.display = "none";
+            }else{
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${txtInput}`;
+                document.querySelector(".qrImg").src = qrCodeUrl;
+                document.querySelector('.qrGenerateArea').classList.add('show');
+                document.querySelector('.qrGenerateArea').style.display = "block";
+                
+            }
+            
+        }
+        document.querySelector('.generateBtn').onclick = function(){
+            var inputVal = document.querySelector('.generateText').value;
+            generateQr(inputVal);
+           document.querySelector('.generateText').value="";
+        }
+         
+        document.querySelector('.saveBtn').onclick = function(){
+            var qrImgSrc = document.querySelector('.qrImg').src;
+            var a = document.createElement('a');
+            a.href = qrImgSrc;
+            a.download = 'qr_code.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
